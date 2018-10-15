@@ -1,0 +1,9 @@
+pipeline:
+
+  build:
+    image: ukhomeoffice/dq-packer-ansible
+    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
+    secrets: [ docker_username, docker_password ]
+    registry: quay.io
+    when:
+      event: push
