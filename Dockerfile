@@ -1,4 +1,4 @@
-FROM hashicorp/packer:light
+FROM hashicorp/packer:1.3.1
 
 RUN apk add --no-cache --virtual .run-deps \
        python2 \
