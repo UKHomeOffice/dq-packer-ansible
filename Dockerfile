@@ -1,16 +1,16 @@
-FROM hashicorp/packer:1.8
+FROM hashicorp/packer:light
 
 RUN apk add --no-cache --virtual .run-deps \
-       python2 \
+       python3 \
        openssh \
     && apk add --no-cache --virtual .build-deps \
         alpine-sdk \
         py-setuptools \
         libffi-dev \
-        python2-dev \
+        python3-dev \
         openssl-dev \
     && easy_install-2.7 pip \
-    && pip install 'ansible==2.4.6.0' \
+    && pip install 'ansible==2.14' \
     && apk --purge del .build-deps \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
