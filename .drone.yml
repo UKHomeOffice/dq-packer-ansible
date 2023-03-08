@@ -27,7 +27,6 @@ steps:
       from_secret: docker_username
   commands:
     - /usr/local/bin/wait
-    - docker run
   when:
     branch:
       exclude:
