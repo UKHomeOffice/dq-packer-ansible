@@ -10,7 +10,7 @@ platform:
 steps:
 - name: build
   pull: if-not-exists
-  image: ukhomeoffice/drone-docker
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
   settings:
     dockerfile: Dockerfile
     force_tag: true
@@ -71,4 +71,4 @@ steps:
 
 services:
   - name: docker
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
