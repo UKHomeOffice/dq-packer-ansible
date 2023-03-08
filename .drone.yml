@@ -10,7 +10,6 @@ platform:
 steps:
 - name: build
   pull: if-not-exists
-#  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
   image: plugins/docker
   settings:
     dockerfile: Dockerfile
@@ -20,6 +19,7 @@ steps:
     tags:
     - ${DRONE_COMMIT_SHA}
     - dev-${DRONE_BUILD_NUMBER}
+    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   environment:
     DOCKER_PASSWORD:
       from_secret: docker_password
@@ -69,6 +69,6 @@ steps:
     target:
     - production
 
-services:
-  - name: docker
-    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
+#services:
+#  - name: docker
+#    image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
