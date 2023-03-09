@@ -1,7 +1,8 @@
 FROM hashicorp/packer:light
 
 # libcurl because there is a critical vulnerability in the version of Alpine inherited from packer image
-RUN apk add --no-cache --virtual .run-deps \
+RUN apk update \
+    && apk add --no-cache --virtual .run-deps \
        python3 \
        openssh \
        ansible-core \
