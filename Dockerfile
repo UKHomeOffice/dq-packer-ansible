@@ -6,9 +6,10 @@ RUN apk add --no-cache --virtual .run-deps \
        openssh \
        ansible-core \
        ansible \
-       libcurl>7.87.0-r2  \
+    && apk update libcurl=7.87.0-r2 \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
+
 
 USER packer
 ENV USER=packer
