@@ -5,15 +5,6 @@ RUN apk add --no-cache --virtual .run-deps \
        openssh \
        ansible-core \
        ansible \
-#    && apk add --no-cache --virtual .build-deps \
-#        alpine-sdk \
-#        py-setuptools \
-#        libffi-dev \
-#        python3-dev \
-#        openssl-dev \
-#    && easy_install-2.7 pip \
-#    && apk add ansible \
-#    && apk --purge del .build-deps \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
 
