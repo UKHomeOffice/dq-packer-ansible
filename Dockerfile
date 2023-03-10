@@ -7,6 +7,7 @@ RUN apk upgrade \
        ansible-core \
        ansible \
        libcurl \
+       golang.org/x/net \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
 
