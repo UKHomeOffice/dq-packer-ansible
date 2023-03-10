@@ -48,7 +48,7 @@ steps:
 
 - name: build-master
   pull: if-not-exists
-  image: ukhomeoffice/drone-docker
+  image: *packer-image
   settings:
     dockerfile: Dockerfile
     force_tag: true
