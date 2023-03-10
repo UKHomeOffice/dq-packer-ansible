@@ -6,6 +6,7 @@ RUN apk upgrade \
        openssh \
        ansible-core \
        ansible \
+       libcurl \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
 
