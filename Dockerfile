@@ -1,10 +1,12 @@
 FROM hashicorp/packer:light
 
-RUN apk add --no-cache --virtual .run-deps \
+RUN apk upgrade \
+    && apk add --no-cache --virtual .run-deps \
        python3 \
        openssh \
        ansible-core \
        ansible \
+       libcurl \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
 
