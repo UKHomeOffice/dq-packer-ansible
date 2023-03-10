@@ -1,4 +1,7 @@
 ---
+global-variables:
+  packer-image: &packer-image quay.io/ukhomeofficedigital/dq-packer-ansible
+
 kind: pipeline
 name: default
 type: kubernetes
@@ -15,7 +18,7 @@ steps:
     dockerfile: Dockerfile
     force_tag: true
     registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
+    repo: *packer-image
     tags:
     - ${DRONE_COMMIT_SHA}
     - dev-${DRONE_BUILD_NUMBER}
@@ -50,11 +53,11 @@ steps:
     dockerfile: Dockerfile
     force_tag: true
     registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
+    repo: *packer-image
     tags:
     - latest
     - b${DRONE_BUILD_NUMBER}
-    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+    cache_from: *packer-image:latest
   environment:
     DOCKER_PASSWORD:
       from_secret: docker_password
