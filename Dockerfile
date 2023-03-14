@@ -10,6 +10,8 @@ RUN apk upgrade \
     && rm -rf /var/cache/apk /root/.cache \
     && adduser -D packer
 
+COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
+RUN packer init /home/packer/.packer.d/conf.pkr.hcl
 
 USER packer
 ENV USER=packer
