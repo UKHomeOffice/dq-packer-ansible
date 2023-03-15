@@ -3,6 +3,7 @@ FROM hashicorp/packer:light
 RUN apk upgrade \
     && apk add --no-cache --virtual .run-deps \
        python3 \
+       py3-pip\
        openssh \
        ansible-core \
        ansible \
