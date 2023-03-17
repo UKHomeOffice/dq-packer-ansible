@@ -28,7 +28,7 @@ steps:
   when:
     branch:
       exclude:
-      - main
+      - master
     event:
     - push
 
@@ -40,7 +40,7 @@ steps:
   when:
     branch:
       exclude:
-      - main
+      - master
     event:
     - push
 
@@ -63,7 +63,7 @@ steps:
       from_secret: docker_username
   when:
     branch:
-    - main
+    - master
     event:
     - promote
     target:
