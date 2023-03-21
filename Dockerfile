@@ -1,6 +1,6 @@
 FROM hashicorp/packer:light
 
-RUN apk upgrade \
+RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
        python3 \
