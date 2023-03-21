@@ -1,13 +1,17 @@
 FROM hashicorp/packer:light
 
-RUN apk upgrade \
+RUN apk update \
+    && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
        python3 \
        py3-pip\
        openssh \
        ansible-core \
        ansible \
-       libcurl \
+       libcurl
+
+RUN apk update \
+    && apk upgrade \
     && rm -rf /var/cache/apk /root/.cache
 
 RUN pip install "pywinrm>=0.3.0"
