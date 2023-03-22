@@ -6,7 +6,6 @@ RUN apk update \
        python3 \
        py3-pip \
        krb5-dev \
-       gcc \
        openssh \
        ansible-core \
        ansible \
