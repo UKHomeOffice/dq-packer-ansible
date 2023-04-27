@@ -3,7 +3,6 @@ FROM hashicorp/packer:light
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
-       busybox \
        python3 \
        py3-pip \
        git \
