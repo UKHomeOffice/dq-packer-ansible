@@ -8,6 +8,7 @@ RUN apk update \
        git \
        krb5-dev \
        openssh \
+       openssl-devel \
        ansible-core \
        ansible \
        libcurl
