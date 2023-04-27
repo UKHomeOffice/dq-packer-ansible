@@ -74,3 +74,7 @@ steps:
     - promote
     target:
     - production
+
+services:
+  - name: docker
+    image: *docker-image
