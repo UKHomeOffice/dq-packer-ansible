@@ -18,7 +18,7 @@ steps:
   image: *docker-image
   commands:
   # wait for docker service to be up before running docker build
-  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - n=0; while [ "$n" -lt 60 ] && ! docker stats --no-stream >/dev/null 2>&1; do n=$(( n + 1 )); sleep 1; done
   - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
   - docker build -t quay.io/ukhomeofficedigital/dq-packer-ansible:latest . --no-cache
   - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
@@ -55,7 +55,7 @@ steps:
   image: *docker-image
   commands:
   # wait for docker service to be up before running docker build
-  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - n=0; while [ "$n" -lt 60 ] && ! docker stats --no-stream >/dev/null 2>&1; do n=$(( n + 1 )); sleep 1; done
   - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
   - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:b${DRONE_BUILD_NUMBER}
