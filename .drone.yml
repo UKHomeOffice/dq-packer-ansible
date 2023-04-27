@@ -10,7 +10,8 @@ platform:
 steps:
 - name: build
   pull: if-not-exists
-  image: plugins/docker
+#  image: plugins/docker
+  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   settings:
     dockerfile: Dockerfile
     force_tag: true
