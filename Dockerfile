@@ -11,8 +11,7 @@ RUN apk update \
        openssl-dev \
        ansible-core \
        ansible \
-       libcurl \
-       packer
+       libcurl
 
 RUN apk update \
     && apk upgrade \
