@@ -1,4 +1,7 @@
 ---
+global-variables:
+  docker-image: &docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+
 kind: pipeline
 name: default
 type: kubernetes
@@ -11,7 +14,7 @@ steps:
 - name: build
   pull: if-not-exists
 #  image: plugins/docker
-  image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  image: *docker-image
   settings:
     dockerfile: Dockerfile
     force_tag: true
