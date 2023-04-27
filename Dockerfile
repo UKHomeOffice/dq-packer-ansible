@@ -5,6 +5,7 @@ RUN apk update \
     && apk add --no-cache --virtual .run-deps \
        python3 \
        py3-pip \
+       git \
        krb5-dev \
        openssh \
        ansible-core \
