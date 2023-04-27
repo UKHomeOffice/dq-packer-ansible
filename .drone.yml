@@ -1,6 +1,8 @@
 ---
 global-variables:
   docker-image: &docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
+  trivy-image: &trivy-image quay.io/ukhomeofficedigital/trivyscanner:master
+
 
 kind: pipeline
 name: default
@@ -13,17 +15,17 @@ platform:
 steps:
 - name: build
   pull: if-not-exists
-#  image: plugins/docker
   image: *docker-image
-  settings:
-    dockerfile: Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - dev-${DRONE_BUILD_NUMBER}
-    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  commands:
+  # wait for docker service to be up before running docker build
+  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
+  - docker build -t quay.io/ukhomeofficedigital/dq-packer-ansible:latest . --no-cache
+  - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
+  - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:dev-${DRONE_BUILD_NUMBER}
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:dev-${DRONE_BUILD_NUMBER}
   environment:
     DOCKER_PASSWORD:
       from_secret: docker_password
@@ -38,7 +40,7 @@ steps:
 
 - name: trivy_scan
   pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/trivyscanner:master
+  image: *trivy-image
   commands:
   - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:${DRONE_COMMIT_SHA}
   when:
@@ -50,16 +52,16 @@ steps:
 
 - name: build-master
   pull: if-not-exists
-  image: plugins/docker
-  settings:
-    dockerfile: Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
-    tags:
-    - latest
-    - b${DRONE_BUILD_NUMBER}
-    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  image: *docker-image
+  commands:
+  # wait for docker service to be up before running docker build
+  - n=0; while [ "$n" -lt 60 ] && [ ! docker stats --no-stream ]; do n=$(( n + 1 )); sleep 1; done
+  - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
+  - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:b${DRONE_BUILD_NUMBER}
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
+  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:dev-${DRONE_BUILD_NUMBER}
   environment:
     DOCKER_PASSWORD:
       from_secret: docker_password
