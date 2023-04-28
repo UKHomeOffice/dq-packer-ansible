@@ -3,7 +3,6 @@ global-variables:
   docker-image: &docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind
   trivy-image: &trivy-image quay.io/ukhomeofficedigital/trivyscanner:master
 
-
 kind: pipeline
 name: default
 type: kubernetes
@@ -23,7 +22,6 @@ steps:
   - docker build -t quay.io/ukhomeofficedigital/dq-packer-ansible:latest . --no-cache
   - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
   - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:latest quay.io/ukhomeofficedigital/dq-packer-ansible:dev-${DRONE_BUILD_NUMBER}
-  - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:$${DRONE_COMMIT_SHA}
   - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:dev-${DRONE_BUILD_NUMBER}
   environment:
