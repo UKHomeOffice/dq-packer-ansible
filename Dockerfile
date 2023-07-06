@@ -12,10 +12,7 @@ RUN apk update \
        ansible-core \
        ansible \
        libcurl \
-       grpc
-
-RUN apk update \
-    && apk upgrade \
+       grpc \
     && rm -rf /var/cache/apk /root/.cache
 
 RUN pip install "pywinrm>=0.3.0"
