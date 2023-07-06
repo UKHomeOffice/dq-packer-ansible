@@ -3,6 +3,7 @@ FROM hashicorp/packer:light
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
+       grpc-dev \
        python3 \
        py3-pip \
        git \
