@@ -10,7 +10,8 @@ RUN apk update \
        openssh \
        openssl-dev \
        ansible-core \
-       ansible
+       ansible \
+       libcurl
 
 RUN apk update \
     && apk upgrade \
