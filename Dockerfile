@@ -3,7 +3,6 @@ FROM hashicorp/packer:light
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
-       grpc-dev \
        python3 \
        py3-pip \
        git \
@@ -12,7 +11,6 @@ RUN apk update \
        openssl-dev \
        ansible-core \
        ansible \
-       libcurl \
     && rm -rf /var/cache/apk /root/.cache
 
 RUN pip install "pywinrm>=0.3.0"
