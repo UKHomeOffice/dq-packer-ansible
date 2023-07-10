@@ -10,7 +10,10 @@ RUN apk update \
        openssh \
        openssl-dev \
        ansible-core \
-       ansible \
+       ansible
+
+RUN apk update \
+    && apk upgrade \
     && rm -rf /var/cache/apk /root/.cache
 
 RUN pip install "pywinrm>=0.3.0"
