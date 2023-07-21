@@ -40,9 +40,9 @@ steps:
   when:
     branch:
       exclude:
-      - master
+        - master
     event:
-    - push
+      - push
 
 - name: build-master
   pull: if-not-exists
