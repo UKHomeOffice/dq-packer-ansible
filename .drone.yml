@@ -26,6 +26,10 @@ steps:
   image: *acp-docker-image
   commands:
     - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
+    - echo $${DRONE_BUILD_NUMBER}
+    - echo ${DRONE_BUILD_NUMBER}
+    - echo $${DRONE_BUILD_PARENT}
+    - echo ${DRONE_BUILD_PARENT}
     - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
@@ -88,7 +92,7 @@ steps:
   image: *acp-docker-image
   commands:
     - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
-    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:latest
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   environment:
     DOCKER_PASSWORD:
