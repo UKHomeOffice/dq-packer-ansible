@@ -1,4 +1,7 @@
 ---
+global-variables:
+  acp-docker-image: &acp-docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
+
 kind: pipeline
 name: default
 type: kubernetes
@@ -8,23 +11,28 @@ platform:
   arch: amd64
 
 steps:
-- name: build
+- name: build_docker_image
   pull: if-not-exists
-  image: plugins/docker
-  settings:
-    dockerfile: Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
-    tags:
-    - ${DRONE_COMMIT_SHA}
-    - dev-${DRONE_BUILD_NUMBER}
-    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  image: *acp-docker-image
+  commands:
+    - /usr/local/bin/wait
+    - docker build --tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} .
+  when:
+    event:
+    - push
+
+- name: push_image_to_quay
+  pull: if-not-exists
+  image: *acp-docker-image
+  commands:
+    - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
+    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
+    - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
     DOCKER_USERNAME:
-      from_secret: docker_username
+      from_secret: DOCKER_USERNAME
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
   when:
     branch:
       exclude:
@@ -36,7 +44,7 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/trivyscanner:master
   commands:
-  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:${DRONE_COMMIT_SHA}
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:${DRONE_BUILD_NUMBER}
   when:
     branch:
       exclude:
@@ -44,27 +52,57 @@ steps:
     event:
       - push
 
-- name: build-master
+
+- name: push_master_image_to_quay
   pull: if-not-exists
-  image: plugins/docker
-  settings:
-    dockerfile: Dockerfile
-    force_tag: true
-    registry: quay.io
-    repo: quay.io/ukhomeofficedigital/dq-packer-ansible
-    tags:
-    - latest
-    - b${DRONE_BUILD_NUMBER}
-    cache_from: quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  image: *acp-docker-image
+  commands:
+    - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
+    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
+    - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
     DOCKER_USERNAME:
-      from_secret: docker_username
+      from_secret: DOCKER_USERNAME
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
   when:
     branch:
-    - master
+      - master
     event:
-    - promote
+    - push
+
+- name: trivy_scan_master
+  pull: if-not-exists
+  image: quay.io/ukhomeofficedigital/trivyscanner:master
+  commands:
+  - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:b-${DRONE_BUILD_NUMBER}
+  when:
+    branch:
+      - master
+    event:
+      - push
+
+
+- name: promote_master
+  pull: if-not-exists
+  image: *acp-docker-image
+  commands:
+    - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
+    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+    - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
+    DOCKER_USERNAME:
+      from_secret: DOCKER_USERNAME
+  when:
+    branch:
+      - master
+    event:
+      - promote
     target:
-    - production
+      - production
+
+services:
+- name: docker
+  image: *acp-docker-image
