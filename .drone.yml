@@ -12,23 +12,6 @@ platform:
   arch: amd64
 
 steps:
-- name: promote_tester
-  pull: if-not-exists
-  image: *acp-docker-image
-  commands:
-    - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
-    - docker pull quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT}
-    - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:t-$${DRONE_BUILD_NUMBER}
-    - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:t-$${DRONE_BUILD_NUMBER}
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
-      from_secret: docker_username
-  when:
-    event:
-      - promote
-
 - name: build_docker_image
   pull: if-not-exists
   image: *acp-docker-image
