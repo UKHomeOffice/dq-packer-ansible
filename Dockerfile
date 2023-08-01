@@ -18,7 +18,8 @@ RUN apk update \
        openssl-dev \
        ansible-core \
        ansible \
-       libcurl
+       libcurl \
+       py3-pip
 
 RUN apk update \
     && apk upgrade \
