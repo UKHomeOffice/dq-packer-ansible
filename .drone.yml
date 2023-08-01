@@ -11,6 +11,20 @@ platform:
   arch: amd64
 
 steps:
+- name: show_build_number
+  pull: if-not-exists
+  image: *acp-docker-image
+  commands:
+    - /usr/local/bin/wait
+    - echo $${DRONE_BUILD_NUMBER}
+    - echo ${DRONE_BUILD_NUMBER}
+    - echo $${DRONE_BUILD_PARENT}
+    - echo ${DRONE_BUILD_PARENT}
+  when:
+    event:
+      - push
+      - promote
+
 - name: build_docker_image
   pull: if-not-exists
   image: *acp-docker-image
@@ -19,17 +33,13 @@ steps:
     - docker build --tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} .
   when:
     event:
-    - push
+      - push
 
 - name: push_image_to_quay
   pull: if-not-exists
   image: *acp-docker-image
   commands:
     - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
-    - echo $${DRONE_BUILD_NUMBER}
-    - echo ${DRONE_BUILD_NUMBER}
-    - echo $${DRONE_BUILD_PARENT}
-    - echo ${DRONE_BUILD_PARENT}
     - docker tag dq-packer-ansible:b-$${DRONE_BUILD_NUMBER} quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
@@ -40,9 +50,9 @@ steps:
   when:
     branch:
       exclude:
-      - master
+        - master
     event:
-    - push
+      - push
 
 - name: trivy_scan
   pull: if-not-exists
@@ -73,7 +83,7 @@ steps:
     branch:
       - master
     event:
-    - push
+      - push
 
 - name: trivy_scan_master
   pull: if-not-exists
