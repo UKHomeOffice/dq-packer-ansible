@@ -18,7 +18,7 @@ steps:
   commands:
     - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
     - docker pull quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT}
-    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:t-$${DRONE_BUILD_NUMBER}
+    - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:t-$${DRONE_BUILD_NUMBER}
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:t-$${DRONE_BUILD_NUMBER}
   environment:
     DOCKER_PASSWORD:
@@ -107,7 +107,7 @@ steps:
   commands:
     - docker login --username=$${DOCKER_USERNAME} --password=$${DOCKER_PASSWORD} quay.io
     - docker pull quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT}
-    - docker tag dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:latest
+    - docker tag quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_PARENT} quay.io/ukhomeofficedigital/dq-packer-ansible:latest
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   environment:
     DOCKER_PASSWORD:
