@@ -5,7 +5,6 @@ RUN apk update \
     && apk add --no-cache --virtual .run-deps \
        python3 \
        py3-pip \
-       py3-cryptography \
        git \
        krb5-dev \
        openssh \
@@ -18,7 +17,7 @@ RUN apk update \
     && apk upgrade \
     && rm -rf /var/cache/apk /root/.cache
 
-RUN pip install "pywinrm>=0.3.0"
+RUN pip install "pywinrm>=0.3.0" "cryptography>=41.0.2˚"
 
 RUN adduser -D packer
 
