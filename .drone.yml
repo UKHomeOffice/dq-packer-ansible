@@ -1,7 +1,6 @@
 ---
 global-variables:
   acp-docker-image: &acp-docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
-  trivy-image: &trivy-image quay.io/ukhomeofficedigital/trivyscanner:master
 
 kind: pipeline
 name: default
@@ -43,7 +42,7 @@ steps:
 
 - name: trivy_scan
   pull: if-not-exists
-  image: *trivy-image
+  image: quay.io/ukhomeofficedigital/trivyscanner:master
   commands:
     - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:b-${DRONE_BUILD_NUMBER}
   when:
@@ -74,7 +73,7 @@ steps:
 
 - name: trivy_scan_master
   pull: if-not-exists
-  image: *trivy-image
+  image: quay.io/ukhomeofficedigital/trivyscanner:master
   commands:
   - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:b-${DRONE_BUILD_NUMBER}
   when:
