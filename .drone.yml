@@ -1,6 +1,7 @@
 ---
 global-variables:
   acp-docker-image: &acp-docker-image 340268328991.dkr.ecr.eu-west-2.amazonaws.com/acp/dind:latest
+  trivy-image: &trivy-image quay.io/ukhomeofficedigital/trivyscanner:master
 
 kind: pipeline
 name: default
@@ -11,20 +12,6 @@ platform:
   arch: amd64
 
 steps:
-- name: show_build_number
-  pull: if-not-exists
-  image: *acp-docker-image
-  commands:
-    - /usr/local/bin/wait
-    - echo $${DRONE_BUILD_NUMBER}
-    - echo ${DRONE_BUILD_NUMBER}
-    - echo $${DRONE_BUILD_PARENT}
-    - echo ${DRONE_BUILD_PARENT}
-  when:
-    event:
-      - push
-      - promote
-
 - name: build_docker_image
   pull: if-not-exists
   image: *acp-docker-image
@@ -56,7 +43,7 @@ steps:
 
 - name: trivy_scan
   pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/trivyscanner:master
+  image: *trivy-image
   commands:
     - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:b-${DRONE_BUILD_NUMBER}
   when:
@@ -87,7 +74,7 @@ steps:
 
 - name: trivy_scan_master
   pull: if-not-exists
-  image: quay.io/ukhomeofficedigital/trivyscanner:master
+  image: *trivy-image
   commands:
   - trivy image --ignore-unfixed --exit-code 0 --no-progress quay.io/ukhomeofficedigital/dq-packer-ansible:b-${DRONE_BUILD_NUMBER}
   when:
