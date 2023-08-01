@@ -30,9 +30,9 @@ steps:
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
     DOCKER_USERNAME:
-      from_secret: DOCKER_USERNAME
+      from_secret: docker_username
     DOCKER_PASSWORD:
-      from_secret: DOCKER_PASSWORD
+      from_secret: docker_password
   when:
     branch:
       exclude:
@@ -62,9 +62,9 @@ steps:
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:b-$${DRONE_BUILD_NUMBER}
   environment:
     DOCKER_USERNAME:
-      from_secret: DOCKER_USERNAME
+      from_secret: docker_username
     DOCKER_PASSWORD:
-      from_secret: DOCKER_PASSWORD
+      from_secret: docker_password
   when:
     branch:
       - master
@@ -92,9 +92,9 @@ steps:
     - docker push quay.io/ukhomeofficedigital/dq-packer-ansible:latest
   environment:
     DOCKER_PASSWORD:
-      from_secret: DOCKER_PASSWORD
+      from_secret: docker_password
     DOCKER_USERNAME:
-      from_secret: DOCKER_USERNAME
+      from_secret: docker_username
   when:
     branch:
       - master
