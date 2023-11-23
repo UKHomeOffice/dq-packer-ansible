@@ -21,6 +21,7 @@ RUN apk update \
 RUN pip install "pywinrm>=0.3.0" "cryptography>=41.0.2"
 
 RUN adduser -D packer
+RUN go get google.golang.org/grpc@latest && go get google.golang.org/http2@latest
 
 COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
 RUN packer init /home/packer/.packer.d/conf.pkr.hcl
