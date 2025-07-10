@@ -12,7 +12,11 @@ RUN apk update \
        openssl-dev \
        ansible-core \
        ansible \
-       libcurl
+       libcurl \
+       aws-cli
+
+# Install the required packer plugins
+RUN packer plugins install github.com/hashicorp/amazon
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
