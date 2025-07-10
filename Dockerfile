@@ -15,11 +15,6 @@ RUN apk update \
        libcurl \
        aws-cli
 
-# Install the required packer plugins
-RUN packer plugins install github.com/hashicorp/amazon
-
-ENV PACKER_PLUGIN_PATH=/root/.config/packer/plugins
-
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
 
@@ -39,7 +34,14 @@ RUN adduser -D packer
 COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
 RUN packer init /home/packer/.packer.d/conf.pkr.hcl
 
+# Allow packer user to install plugins
+RUN chown -R packer:packer /home/packer
+
 USER packer
 ENV USER=packer
 ENV HOME=/home/packer
 WORKDIR /home/packer
+
+# Install amazon-ebs plugins
+
+RUN packer plugins install github.com/hashicorp/amazon
