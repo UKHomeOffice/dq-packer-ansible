@@ -45,3 +45,4 @@ WORKDIR /home/packer
 # Install amazon-ebs plugins
 
 RUN packer plugins install github.com/hashicorp/amazon
+RUN packer plugins install github.com/hashicorp/ansible
