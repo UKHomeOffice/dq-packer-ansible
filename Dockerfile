@@ -15,9 +15,6 @@ RUN apk update \
        libcurl \
        aws-cli
 
-# Install the required packer plugins
-RUN packer plugins install github.com/hashicorp/amazon
-
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
 
@@ -41,3 +38,6 @@ USER packer
 ENV USER=packer
 ENV HOME=/home/packer
 WORKDIR /home/packer
+
+# Install the required packer plugins (as packer user)
+RUN packer plugins install github.com/hashicorp/amazon
