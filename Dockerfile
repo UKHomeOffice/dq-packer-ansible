@@ -1,4 +1,6 @@
 FROM hashicorp/packer:light
+ARG PACKER_GITHUB_API_TOKEN
+ENV PACKER_GITHUB_API_TOKEN=${PACKER_GITHUB_API_TOKEN}
 
 # Install system dependencies
 RUN apk update \
@@ -16,9 +18,9 @@ RUN apk update \
        aws-cli
 
 # Install the required packer plugins
-RUN packer plugins install github.com/hashicorp/amazon
+# RUN packer plugins install github.com/hashicorp/amazon
 
-ENV PACKER_PLUGIN_PATH=/root/.config/packer/plugins
+# ENV PACKER_PLUGIN_PATH=/root/.config/packer/plugins
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
@@ -39,7 +41,12 @@ RUN adduser -D packer
 COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
 RUN packer init /home/packer/.packer.d/conf.pkr.hcl
 
+# Allow packer user to install plugins
+RUN chown -R packer:packer /home/packer
+
 USER packer
 ENV USER=packer
 ENV HOME=/home/packer
 WORKDIR /home/packer
+
+RUN packer plugins install github.com/hashicorp/amazon
