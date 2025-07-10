@@ -18,6 +18,8 @@ RUN apk update \
 # Install the required packer plugins
 RUN packer plugins install github.com/hashicorp/amazon
 
+ENV PACKER_PLUGIN_PATH=/root/.config/packer/plugins
+
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
 
