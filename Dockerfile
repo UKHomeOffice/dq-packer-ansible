@@ -43,6 +43,3 @@ USER packer
 ENV USER=packer
 ENV HOME=/home/packer
 WORKDIR /home/packer
-
-# Install the required packer plugins (as packer user)
-RUN packer plugins install github.com/hashicorp/amazon
