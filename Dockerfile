@@ -1,5 +1,6 @@
 FROM hashicorp/packer:light
 
+# Install system dependencies
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
@@ -13,14 +14,22 @@ RUN apk update \
        ansible \
        libcurl
 
-RUN apk update \
-    && apk upgrade \
-    && rm -rf /var/cache/apk /root/.cache
+# Clean up APK cache
+RUN rm -rf /var/cache/apk /root/.cache
 
-RUN pip install "pywinrm>=0.3.0" "cryptography>=41.0.2"
+# Create a Python virtual environment and install packages inside it
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install "pywinrm>=0.3.0" "cryptography>=41.0.2"
 
+# Set environment variables so venv is always active
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Add packer user
 RUN adduser -D packer
 
+# Copy Packer config and initialize
 COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
 RUN packer init /home/packer/.packer.d/conf.pkr.hcl
 
