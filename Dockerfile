@@ -11,7 +11,7 @@ RUN apk update \
        openssh \
        openssl-dev \
        libcurl \
-       aws-cli 
+       aws-cli
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
