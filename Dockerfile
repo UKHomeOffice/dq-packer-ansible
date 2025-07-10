@@ -10,10 +10,8 @@ RUN apk update \
        krb5-dev \
        openssh \
        openssl-dev \
-       ansible-core \
-       ansible \
        libcurl \
-       aws-cli
+       aws-cli 
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
@@ -21,7 +19,7 @@ RUN rm -rf /var/cache/apk /root/.cache
 # Create a Python virtual environment and install packages inside it
 RUN python3 -m venv /opt/venv \
     && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install "pywinrm>=0.3.0" "cryptography>=41.0.2"
+    && /opt/venv/bin/pip install "pywinrm>=0.3.0" "cryptography>=41.0.2" "ansible"
 
 # Set environment variables so venv is always active
 ENV VIRTUAL_ENV=/opt/venv
