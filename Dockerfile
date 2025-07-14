@@ -13,7 +13,8 @@ RUN apk update \
        ansible-core \
        ansible \
        libcurl \
-       aws-cli
+       aws-cli \
+       ansible
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
