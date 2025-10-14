@@ -11,7 +11,12 @@ RUN apk update \
        openssh \
        openssl-dev \
        libcurl \
-       aws-cli
+       libcrypto3 \
+       libssl3 \
+       aws-cli \
+       sqlite \
+       sqlite-dev \ 
+       sqlite-libs
 
 # Clean up APK cache
 RUN rm -rf /var/cache/apk /root/.cache
@@ -19,6 +24,7 @@ RUN rm -rf /var/cache/apk /root/.cache
 # Create a Python virtual environment and install packages inside it
 RUN python3 -m venv /opt/venv \
     && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install --upgrade urllib3 \
     && /opt/venv/bin/pip install "pywinrm>=0.3.0" "cryptography>=41.0.2" "ansible"
 
 # Set environment variables so venv is always active
