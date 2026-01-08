@@ -1,6 +1,5 @@
 FROM hashicorp/packer:light
 
-# Install system dependencies
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache --virtual .run-deps \
@@ -15,38 +14,33 @@ RUN apk update \
        libssl3 \
        aws-cli \
        sqlite \
-       sqlite-dev \ 
-       sqlite-libs
+       sqlite-dev \
+       sqlite-libs \
+    # Remove GnuPG
+    && apk del gnupg gnupg-dirmngr gnupg-gpgconf gnupg-keyboxd gnupg-utils \
+              gnupg-wks-client gpg gpg-agent gpg-wks-server gpgsm gpgv || true \
+    && rm -rf /var/cache/apk /root/.cache
 
-# Clean up APK cache
-RUN rm -rf /var/cache/apk /root/.cache
-
-# Create a Python virtual environment and install packages inside it
+# Create Python venv + Ansible (secrets FP ignored via Trivy flags)
 RUN python3 -m venv /opt/venv \
-    && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install --upgrade urllib3 \
+    && /opt/venv/bin/pip install --upgrade pip urllib3 \
     && /opt/venv/bin/pip install "pywinrm>=0.3.0" "cryptography>=41.0.2" "ansible"
 
-# Set environment variables so venv is always active
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Add packer user
+# Packer user + config
 RUN adduser -D packer
-
-# Copy Packer config and initialize
 COPY conf.pkr.hcl /home/packer/.packer.d/conf.pkr.hcl
 RUN packer init /home/packer/.packer.d/conf.pkr.hcl
-
-# Allow packer user to install plugins
 RUN chown -R packer:packer /home/packer
+
+RUN rm -rf /root/.config/packer/plugins /home/packer/.packer.d/plugins || true
 
 USER packer
 ENV USER=packer
 ENV HOME=/home/packer
 WORKDIR /home/packer
-
-# Install amazon-ebs plugins
 
 RUN packer plugins install github.com/hashicorp/amazon
 RUN packer plugins install github.com/hashicorp/ansible
